@@ -6,7 +6,7 @@
             </div>
             <div class="col-md-8">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="=SearchText" aria-describedby="Input text here to search" placeholder="Input text here to search">
+                    <input type="text" class="form-control" id="=SearchText" aria-describedby="Input text here to search" placeholder="Search by employee's name" v-model="InputText">
                 </div>
             </div>
         </div>
@@ -20,9 +20,15 @@ export default {
     name: 'search-form',
     methods: {
         searchButtonClick(){
-            console.log('Hello')
+            console.log(this.InputText)
+            this.$emit('EmployeeSearch', this.InputText)
         }
-    }
+    },
+    data(){
+        return {
+            InputText:""
+        }
+    },
 }
 </script>
 <style>

@@ -42,6 +42,24 @@ class EmployeeController extends Controller
         return $result;
     }
 
+    public function search($start, $end, $InputText){
+        $number_tobe_removed = $start-1;
+        $number_tobe_gotted = $end - $number_tobe_removed;
+        $sql_query = "
+        select employees.emp_no, concat(first_name, \" \", last_name) as name, gender, if(dept_emp.to_date>=curdate(), \"Yes\", \"No\") as currently_hired, salary
+        from employees
+        inner join dept_emp
+        on employees.emp_no=dept_emp.emp_no and (employees.first_name like '%$InputText' or employees.last_name like '%$InputText')
+        inner join salaries
+        on dept_emp.emp_no=salaries.emp_no and dept_emp.to_date=salaries.to_date
+        limit $number_tobe_removed, $number_tobe_gotted;
+        ";
+
+        $result = DB::select(DB::raw($sql_query));
+        return $result;
+
+    }
+
     /**
      * Display a listing of the resource.
      *

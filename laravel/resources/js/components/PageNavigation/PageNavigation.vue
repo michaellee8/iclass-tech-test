@@ -4,28 +4,24 @@
           <div class="col-md-6">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'<'"  v-bind:MaxPageCount="MaxPageCount" v-on:changePage="onChangePage($event)"></page-navigation-link>
-                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'1'" v-bind:MaxPageCount="MaxPageCount" v-on:changePage="onChangePage($event)"></page-navigation-link>
-                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'2'"  v-bind:MaxPageCount="MaxPageCount" v-on:changePage="onChangePage($event)"></page-navigation-link>
-                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'3'"  v-bind:MaxPageCount="MaxPageCount" v-on:changePage="onChangePage($event)"></page-navigation-link>
-                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'...'"  v-bind:MaxPageCount="MaxPageCount" v-on:changePage="onChangePage($event)"></page-navigation-link>
-                        <!-- <li class="page-item"><a class="page-link" href="#" v-on:click="onLinkClick(CurrentPage-1)"><</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link active" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'<'"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'1'" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'2'"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'3'"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
 
-                        <li class="page-item"><a class="page-link disabled" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{CurrentPage-2}}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{CurrentPage-1}}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{CurrentPage}}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{CurrentPage+1}}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{CurrentPage+2}}</a></li>
-                        <li class="page-item"><a class="page-link disabled" href="#">...</a></li> -->
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'...'"  v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(CurrentPage-2).toString()" v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(CurrentPage-1).toString()" v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(CurrentPage).toString()" v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(CurrentPage+1).toString()" v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(CurrentPage+2).toString()" v-bind:DisplayNone="this.LinkDisplay" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'...'"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
 
-                        <!-- <li class="page-item"><a class="page-link" href="#">{{ Math.ceil(NumberOfEmployee/NumberOfEmployeeRow)-2 }}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{ Math.ceil(NumberOfEmployee/NumberOfEmployeeRow)-1 }}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">{{ Math.ceil(NumberOfEmployee/NumberOfEmployeeRow) }}</a></li>
-                        <li class="page-item"><a class="page-link" href="#">></a></li> -->
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="Math.ceil((NumberOfEmployee/NumberOfEmployeeRow)-2).toString()"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(Math.ceil(NumberOfEmployee/NumberOfEmployeeRow)-1).toString()" v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="(Math.ceil(NumberOfEmployee/NumberOfEmployeeRow)).toString()"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+                        <page-navigation-link  v-bind:CurrentPageNavigating="this.CurrentPageNavigating" v-bind:LinkName="'>'"  v-bind:MaxPageCount="MaxPageCount" v-on:ChangePage="onChangePage($event)"></page-navigation-link>
+
                     </ul>
                 </nav>
           </div>
@@ -48,12 +44,26 @@ export default {
     data(){
         return {
             CurrentPageNavigating: this.CurrentPage,
+            LinkDisplay: true,
             MaxPageCount: Math.ceil(this.NumberOfEmployee/this.NumberOfEmployeeRow),
+
+        }
+    },
+    watch:{
+        CurrentPage(){
+            this.CurrentPageNavigating = this.CurrentPage
+            this.MaxPageCount = Math.ceil(this.NumberOfEmployee/this.NumberOfEmployeeRow)
+            if(this.CurrentPageNavigating<6 || this.CurrentPageNavigating-5>this.MaxPageCount){
+                this.LinkDisplay = true
+            } else {
+                this.LinkDisplay = false
+            }
+            console.log(this.MaxPageCount)
         }
     },
     methods: {
         onChangePage(newValue){
-            console.log(newValue)
+            this.$emit('ChangePage', newValue)
         }
     },
 }

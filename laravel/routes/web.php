@@ -18,6 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('api/employees/get/{start}/{end}', 'EmployeeController@get');
+Route::get('api/employees/search/{start}/{end}/{InputName}', 'EmployeeController@search');
 Route::get('api/employees/count', 'EmployeeController@count');
 
 

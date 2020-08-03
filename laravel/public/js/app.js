@@ -2148,12 +2148,54 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
+    fetchEmployesSearchResult: function fetchEmployesSearchResult(InputText) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var rawDataFetched, employeesResultFetched;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this3.Employees = _this3.Employees.slice(0, 0);
+                _context3.next = 3;
+                return fetch("api/employees/search/".concat((_this3.CurrentPage - 1) * _this3.NumberOfEmployeeRow + 1, "/").concat(_this3.CurrentPage * _this3.NumberOfEmployeeRow, "/").concat(InputText));
+
+              case 3:
+                rawDataFetched = _context3.sent;
+                _context3.next = 6;
+                return rawDataFetched.json();
+
+              case 6:
+                employeesResultFetched = _context3.sent;
+                employeesResultFetched.forEach(function (employee) {
+                  _this3.Employees.push(employee);
+                });
+
+              case 8:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
     onChangeNumberOfEmployeeRowOption: function onChangeNumberOfEmployeeRowOption(newValue) {
       this.NumberOfEmployeeRow = newValue;
+    },
+    onChangePage: function onChangePage(newValue) {
+      this.CurrentPage = newValue;
+      console.log(this.CurrentPage);
+    },
+    onEmployeeSearch: function onEmployeeSearch(newValue) {
+      this.fetchEmployesSearchResult(newValue);
     }
   },
   watch: {
     NumberOfEmployeeRow: function NumberOfEmployeeRow(newValue, oldValue) {
+      this.fetchEmployees();
+    },
+    CurrentPage: function CurrentPage() {
       this.fetchEmployees();
     }
   },
@@ -2206,10 +2248,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'page-navigation',
@@ -2220,12 +2258,27 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       CurrentPageNavigating: this.CurrentPage,
+      LinkDisplay: true,
       MaxPageCount: Math.ceil(this.NumberOfEmployee / this.NumberOfEmployeeRow)
     };
   },
+  watch: {
+    CurrentPage: function CurrentPage() {
+      this.CurrentPageNavigating = this.CurrentPage;
+      this.MaxPageCount = Math.ceil(this.NumberOfEmployee / this.NumberOfEmployeeRow);
+
+      if (this.CurrentPageNavigating < 6 || this.CurrentPageNavigating - 5 > this.MaxPageCount) {
+        this.LinkDisplay = true;
+      } else {
+        this.LinkDisplay = false;
+      }
+
+      console.log(this.MaxPageCount);
+    }
+  },
   methods: {
     onChangePage: function onChangePage(newValue) {
-      console.log(newValue);
+      this.$emit('ChangePage', newValue);
     }
   }
 });
@@ -2253,6 +2306,7 @@ __webpack_require__.r(__webpack_exports__);
     LinkName: String,
     CurrentPageNavigating: Number,
     MaxPageCount: Number,
+    DisplayNone: Boolean,
     onNavigationLinkClick: {
       type: Function
     }
@@ -2260,22 +2314,42 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     var isLinkDisabled = this.LinkName === "...";
     var isLinkActive = this.LinkName === this.CurrentPageNavigating.toString();
+    var isDisplayNone = this.DisplayNone;
     return {
       isLinkDisabled: isLinkDisabled,
       isLinkActive: isLinkActive,
-      PageToBeNavigated: this.CurrentPageNavigating
+      PageToBeNavigated: this.CurrentPageNavigating,
+      isDisplayNone: isDisplayNone
     };
   },
   methods: {
     onLinkClick: function onLinkClick() {
       if (this.LinkName === '<' && this.CurrentPageNavigating > 1) {
         this.PageToBeNavigated = this.PageToBeNavigated - 1;
+        this.$emit('ChangePage', this.PageToBeNavigated);
+        console.log('triggere');
       } else if (this.LinkName === '>' && this.CurrentPageNavigating < this.MaxPageCount) {
         this.PageToBeNavigated = this.PageToBeNavigated + 1;
-      } else {
-        this.PageToBeNavigated = parseInt(this.LinkName);
+        this.$emit('ChangePage', this.PageToBeNavigated);
+      } else if (Number.isInteger(parseFloat(this.LinkName))) {
+        this.PageToBeNavigated = parseFloat(this.LinkName);
+        this.$emit('ChangePage', this.PageToBeNavigated);
       }
+
+      console.log(this.CurrentPageNavigating);
+      console.log(this.LinkName);
     }
+  },
+  watch: {
+    CurrentPageNavigating: function CurrentPageNavigating() {
+      this.isLinkActive = this.LinkName === this.CurrentPageNavigating.toString();
+      this.PageToBeNavigated = this.CurrentPageNavigating;
+      this.isDisplayNone = this.DisplayNone;
+    }
+  },
+  beforeMount: function beforeMount() {
+    console.log(this.isDisplayNone);
+    console.log(this.DisplayNone);
   }
 });
 
@@ -2310,8 +2384,14 @@ __webpack_require__.r(__webpack_exports__);
   name: 'search-form',
   methods: {
     searchButtonClick: function searchButtonClick() {
-      console.log('Hello');
+      console.log(this.InputText);
+      this.$emit('EmployeeSearch', this.InputText);
     }
+  },
+  data: function data() {
+    return {
+      InputText: ""
+    };
   }
 });
 
@@ -38827,7 +38907,13 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("search-form"),
+      _c("search-form", {
+        on: {
+          EmployeeSearch: function($event) {
+            return _vm.onEmployeeSearch($event)
+          }
+        }
+      }),
       _vm._v(" "),
       _c("employees-table", { attrs: { Employees: _vm.Employees } }),
       _vm._v(" "),
@@ -38836,6 +38922,11 @@ var render = function() {
           NumberOfEmployeeRow: _vm.NumberOfEmployeeRow,
           NumberOfEmployee: _vm.NumberOfEmployee,
           CurrentPage: _vm.CurrentPage
+        },
+        on: {
+          ChangePage: function($event) {
+            return _vm.onChangePage($event)
+          }
         }
       }),
       _vm._v(" "),
@@ -38887,7 +38978,7 @@ var render = function() {
                   MaxPageCount: _vm.MaxPageCount
                 },
                 on: {
-                  changePage: function($event) {
+                  ChangePage: function($event) {
                     return _vm.onChangePage($event)
                   }
                 }
@@ -38900,7 +38991,7 @@ var render = function() {
                   MaxPageCount: _vm.MaxPageCount
                 },
                 on: {
-                  changePage: function($event) {
+                  ChangePage: function($event) {
                     return _vm.onChangePage($event)
                   }
                 }
@@ -38913,7 +39004,7 @@ var render = function() {
                   MaxPageCount: _vm.MaxPageCount
                 },
                 on: {
-                  changePage: function($event) {
+                  ChangePage: function($event) {
                     return _vm.onChangePage($event)
                   }
                 }
@@ -38926,7 +39017,91 @@ var render = function() {
                   MaxPageCount: _vm.MaxPageCount
                 },
                 on: {
-                  changePage: function($event) {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: "...",
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: (_vm.CurrentPage - 2).toString(),
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: (_vm.CurrentPage - 1).toString(),
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: _vm.CurrentPage.toString(),
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: (_vm.CurrentPage + 1).toString(),
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: (_vm.CurrentPage + 2).toString(),
+                  DisplayNone: this.LinkDisplay,
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
                     return _vm.onChangePage($event)
                   }
                 }
@@ -38939,7 +39114,66 @@ var render = function() {
                   MaxPageCount: _vm.MaxPageCount
                 },
                 on: {
-                  changePage: function($event) {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: Math.ceil(
+                    _vm.NumberOfEmployee / _vm.NumberOfEmployeeRow - 2
+                  ).toString(),
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: (
+                    Math.ceil(_vm.NumberOfEmployee / _vm.NumberOfEmployeeRow) -
+                    1
+                  ).toString(),
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: Math.ceil(
+                    _vm.NumberOfEmployee / _vm.NumberOfEmployeeRow
+                  ).toString(),
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
+                    return _vm.onChangePage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("page-navigation-link", {
+                attrs: {
+                  CurrentPageNavigating: this.CurrentPageNavigating,
+                  LinkName: ">",
+                  MaxPageCount: _vm.MaxPageCount
+                },
+                on: {
+                  ChangePage: function($event) {
                     return _vm.onChangePage($event)
                   }
                 }
@@ -38978,7 +39212,11 @@ var render = function() {
     "li",
     {
       staticClass: "page-item",
-      class: { disabled: _vm.isLinkDisabled, active: _vm.isLinkActive }
+      class: {
+        disabled: _vm.isLinkDisabled,
+        active: _vm.isLinkActive,
+        "d-none": _vm.isDisplayNone
+      }
     },
     [
       _c(
@@ -38988,8 +39226,7 @@ var render = function() {
           attrs: { href: "#" },
           on: {
             click: function($event) {
-              _vm.onLinkClick()
-              _vm.$emit("changePage", this.LinkName)
+              return _vm.onLinkClick()
             }
           }
         },
@@ -39038,30 +39275,40 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm._m(0)
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.InputText,
+                expression: "InputText"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "=SearchText",
+              "aria-describedby": "Input text here to search",
+              placeholder: "Search by employee's name"
+            },
+            domProps: { value: _vm.InputText },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.InputText = $event.target.value
+              }
+            }
+          })
+        ])
+      ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-8" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            id: "=SearchText",
-            "aria-describedby": "Input text here to search",
-            placeholder: "Input text here to search"
-          }
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

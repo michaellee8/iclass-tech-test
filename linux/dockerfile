@@ -1,0 +1,7 @@
+FROM alpine
+
+MAINTAINER Jordan Ho <jordanho2782@gmail.com>
+
+COPY bashCommand.sh .
+
+CMD ["sh", "bashCommand.sh"]
